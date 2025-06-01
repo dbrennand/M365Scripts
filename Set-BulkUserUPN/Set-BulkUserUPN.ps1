@@ -51,7 +51,6 @@ param (
 )
 
 begin {
-
     #region Connect to Microsoft Graph
     $Scopes = "User.ReadWrite.All", "Domain.Read.All"
     try {
