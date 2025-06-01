@@ -82,7 +82,7 @@ begin {
 process {
     #region Collect all users
     try {
-        Write-Verbose -Message "Collecting all users from Microsoft 365 tenant."
+        Write-Verbose -Message "Collecting all users from the Microsoft 365 tenant."
         $Users = Get-MgUser -All -Verbose:($PSBoundParameters["Verbose"] -eq $true) -ErrorAction Stop
         Write-Output -InputObject "Found $($Users.Count) users in Microsoft 365 tenant."
     }
