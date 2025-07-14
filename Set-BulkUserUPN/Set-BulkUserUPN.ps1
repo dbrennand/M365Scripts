@@ -54,7 +54,6 @@ begin {
     #region Connect to Microsoft Graph
     $Scopes = "User.ReadWrite.All", "Domain.Read.All"
     try {
-
         Write-Verbose -Message "Connecting to Microsoft Graph with scopes: $($Scopes)."
         Connect-MgGraph -Scopes $Scopes -Verbose:($PSBoundParameters["Verbose"] -eq $true) -ErrorAction Stop
     }
