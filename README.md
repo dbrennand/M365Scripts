@@ -1,3 +1,3 @@
 # M365Scripts
 
-Microsoft 365 Administrator Scripts
+A collection of helpful Microsoft 365 Administrator Scripts.
