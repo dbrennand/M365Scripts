@@ -54,7 +54,6 @@ begin {
     #region Connect to Microsoft Graph
     $Scopes = "User.ReadWrite.All", "Domain.Read.All"
     try {
-
         Write-Verbose -Message "Connecting to Microsoft Graph with scopes: $($Scopes)."
         Connect-MgGraph -Scopes $Scopes -Verbose:($PSBoundParameters["Verbose"] -eq $true) -ErrorAction Stop
     }
@@ -66,10 +65,13 @@ begin {
 
     #region Check the Domain is registered with the Microsoft 365 tenant
     try {
-        Write-Verbose -Message "Checking if domain $($Domain) is registered with the Microsoft 365 tenant."
+        Write-Verbose -Message "Checking if the domain $($Domain) is registered with the Microsoft 365 tenant."
         $Domains = Get-MgDomain -All
         if ($Domain -notin $Domains.Id) {
             throw "Domain $($Domain) is not registered."
+        }
+        else {
+            Write-Output -InputObject "Domain $($Domain) is registered with the Microsoft 365 tenant."
         }
     }
     catch {
@@ -82,12 +84,12 @@ begin {
 process {
     #region Collect all users
     try {
-        Write-Verbose -Message "Collecting all users from the Microsoft 365 tenant."
+        Write-Verbose -Message "Collecting all users in the Microsoft 365 tenant."
         $Users = Get-MgUser -All -Verbose:($PSBoundParameters["Verbose"] -eq $true) -ErrorAction Stop
-        Write-Output -InputObject "Found $($Users.Count) users in Microsoft 365 tenant."
+        Write-Output -InputObject "Found $($Users.Count) users in the Microsoft 365 tenant."
     }
     catch {
-        Write-Error -Message "Failed to connect all users from the Microsoft 365 tenant:`n$($_.Exception.Message)"
+        Write-Error -Message "Failed to collect all users in the Microsoft 365 tenant:`n$($_.Exception.Message)"
         exit 1
     }
     #endregion
@@ -97,12 +99,12 @@ process {
         foreach ($User in $Users) {
             $UserName = ($User.UserPrincipalName -split "@")[0]
             $NewUserPrincipleName = "$($UserName)@$($Domain)"
-            Write-Output -InputObject "Changing User Principle Name from $($User.UserPrincipalName) to $($NewUserPrincipleName)."
+            Write-Output -InputObject "Changing User Principle Name (UPN) from $($User.UserPrincipalName) to $($NewUserPrincipleName)."
             Update-MgUser -UserId $User.Id -UserPrincipalName $NewUserPrincipleName -Verbose:($PSBoundParameters["Verbose"] -eq $true) -ErrorAction Stop
         }
     }
     catch {
-        Write-Error -Message "Failed to modify User Principle Name for $($User.UserPrincipalName):`n$($_.Exception.Message)"
+        Write-Error -Message "Failed to modify User Principle Name (UPN) for $($User.UserPrincipalName):`n$($_.Exception.Message)"
         exit 1
     }
     #endregion
