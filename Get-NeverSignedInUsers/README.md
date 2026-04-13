@@ -20,17 +20,35 @@ Install-Module Microsoft.Graph -Scope CurrentUser -Repository PSGallery -Force
 ## Usage
 
 ```PowerShell
-Get-NeverSignedInUsers.ps1 -Verbose
+./Get-NeverSignedInUsers.ps1 -Verbose
 ```
 
 Export results to CSV:
 
 ```PowerShell
-Get-NeverSignedInUsers.ps1 -ExportCsv "NeverSignedIn.csv" -Verbose
+./Get-NeverSignedInUsers.ps1 -ExportCsv "NeverSignedIn.csv" -Verbose
 ```
 
 Limit to users created within the last 30 days (approximate "never" for new accounts):
 
 ```PowerShell
-Get-NeverSignedInUsers.ps1 -CreatedWithinDays 30 -ExportCsv "NeverSignedIn.csv" -Verbose
+./Get-NeverSignedInUsers.ps1 -CreatedWithinDays 30 -ExportCsv "NeverSignedIn.csv" -Verbose
+```
+
+Find users who have not signed in for 90 days (or have no recorded sign-in activity):
+
+```PowerShell
+./Get-NeverSignedInUsers.ps1 -InactiveDays 90 -Verbose
+```
+
+Find users inactive for a custom number of days and export to CSV:
+
+```PowerShell
+./Get-NeverSignedInUsers.ps1 -InactiveDays 60 -ExportCsv "InactiveUsers.csv" -Verbose
+```
+
+Exclude disabled accounts from results:
+
+```PowerShell
+./Get-NeverSignedInUsers.ps1 -ExcludeDisabled -Verbose
 ```

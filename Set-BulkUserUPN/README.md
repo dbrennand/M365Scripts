@@ -18,5 +18,5 @@ Install-Module Microsoft.Graph -Scope CurrentUser -Repository PSGallery -Force
 ## Usage
 
 ```PowerShell
-Set-BulkUserUPN.ps1 -Domain "example.com" -Verbose
+./Set-BulkUserUPN.ps1 -Domain "example.com" -Verbose
 ```
