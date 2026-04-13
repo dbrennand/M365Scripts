@@ -1,6 +1,9 @@
 # Get-NeverSignedInUsers
 
-Gets Microsoft 365 users who have no recorded sign-in activity (via Microsoft Graph `signInActivity`). Useful for identifying newly provisioned or inactive accounts. Note: `signInActivity` reflects recent history (typically ~30 days), so results include users who never signed in or have no sign-ins within that window.
+Gets Microsoft 365 users who have no recorded sign-in activity (via Microsoft Graph `signInActivity`). Useful for identifying newly provisioned or inactive accounts.
+
+> [!NOTE]
+> `signInActivity` reflects recent history (typically ~30 days), so results include users who never signed in or have no sign-ins within that window.
 
 ## Prerequisites
 
