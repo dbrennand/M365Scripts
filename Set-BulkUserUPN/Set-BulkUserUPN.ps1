@@ -4,7 +4,7 @@
 
 .GUID 9b1a6f62-c4b3-47f0-b320-4503766514ef
 
-.AUTHOR dbrennand [ 52419383+dbrennand@users.noreply.github.com ]
+.AUTHOR Daniel Brennand [ 52419383+dbrennand@users.noreply.github.com ]
 
 .TAGS Set Bulk User UPN
 
