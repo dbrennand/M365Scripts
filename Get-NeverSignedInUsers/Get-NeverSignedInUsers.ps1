@@ -112,7 +112,7 @@ process {
     #region Filter users with no recorded sign-in activity (or inactive beyond threshold)
     try {
         if ($PSBoundParameters.ContainsKey("InactiveDays")) {
-            $InactiveCutOff = [DateTimeOffset]::UtcNow.AddDays(-1 * $InactiveDays)
+            $InactiveCutOff = [DateTime]::UtcNow.AddDays(-1 * $InactiveDays)
             Write-Verbose -Message "Applying InactiveDays filter: last sign-in before $($InactiveCutOff) or no sign-in recorded."
             $NeverSignedIn = $Users |
                 Where-Object -FilterScript {
