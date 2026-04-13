@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 1.0.0
+.VERSION 1.1.0
 
 .GUID 2b0f2c1d-7d2a-4d0a-9a4e-7b1b5d2f1c6e
 
@@ -41,11 +41,22 @@
     Optional filter: only include users created within the specified number of days.
     Useful to approximate "never signed in" for newly provisioned accounts.
 
+.PARAMETER InactiveDays
+    Optional filter: include users whose last sign-in (interactive or non-interactive) is older
+    than the specified number of days, in addition to users with no recorded sign-in activity.
+    Accepts an integer between 1 and 3650 (e.g. 90 for 90 days).
+
 .EXAMPLE
     Get-NeverSignedInUsers.ps1 -Verbose
 
 .EXAMPLE
     Get-NeverSignedInUsers.ps1 -CreatedWithinDays 30 -ExportCsv "NeverSignedIn.csv" -Verbose
+
+.EXAMPLE
+    Get-NeverSignedInUsers.ps1 -InactiveDays 90 -Verbose
+
+.EXAMPLE
+    Get-NeverSignedInUsers.ps1 -InactiveDays 90 -ExportCsv "InactiveUsers.csv" -Verbose
 
 .LINK
     https://learn.microsoft.com/graph/api/resources/signinactivity
@@ -62,7 +73,12 @@ param (
     [Parameter(Mandatory = $false)]
     [ValidateRange(1, 3650)]
     [Int]
-    $CreatedWithinDays
+    $CreatedWithinDays,
+
+    [Parameter(Mandatory = $false)]
+    [ValidateRange(1, 3650)]
+    [Int]
+    $InactiveDays
 )
 
 begin {
@@ -93,14 +109,29 @@ process {
     }
     #endregion
 
-    #region Filter users with no recorded sign-in activity
+    #region Filter users with no recorded sign-in activity (or inactive beyond threshold)
     try {
-        $NeverSignedIn = $Users |
-            Where-Object -FilterScript {
-                -not $_.SignInActivity -or (
-                    -not $_.SignInActivity.LastSignInDateTime -and -not $_.SignInActivity.LastNonInteractiveSignInDateTime
-                )
-            }
+        if ($PSBoundParameters.ContainsKey("InactiveDays")) {
+            $InactiveCutOff = [DateTimeOffset]::UtcNow.AddDays(-1 * $InactiveDays)
+            Write-Verbose -Message "Applying InactiveDays filter: last sign-in before $($InactiveCutOff) or no sign-in recorded."
+            $NeverSignedIn = $Users |
+                Where-Object -FilterScript {
+                    -not $_.SignInActivity -or (
+                        -not $_.SignInActivity.LastSignInDateTime -and -not $_.SignInActivity.LastNonInteractiveSignInDateTime
+                    ) -or (
+                        ($_.SignInActivity.LastSignInDateTime -and $_.SignInActivity.LastSignInDateTime -lt $InactiveCutOff) -or
+                        ($_.SignInActivity.LastNonInteractiveSignInDateTime -and $_.SignInActivity.LastNonInteractiveSignInDateTime -lt $InactiveCutOff)
+                    )
+                }
+        }
+        else {
+            $NeverSignedIn = $Users |
+                Where-Object -FilterScript {
+                    -not $_.SignInActivity -or (
+                        -not $_.SignInActivity.LastSignInDateTime -and -not $_.SignInActivity.LastNonInteractiveSignInDateTime
+                    )
+                }
+        }
 
         if ($PSBoundParameters.ContainsKey("CreatedWithinDays")) {
             $CutOff = [DateTimeOffset]::UtcNow.AddDays(-1 * $CreatedWithinDays)

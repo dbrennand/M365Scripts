@@ -21,13 +21,13 @@ Install-Module Microsoft.Graph -Scope CurrentUser -Repository PSGallery -Force
 ## Usage
 
 ```PowerShell
-Set-BulkUserDetails.ps1 -CsvFile "UserDetails.csv"
+./Set-BulkUserDetails.ps1 -CsvFile "UserDetails.csv"
 ```
 
 Preview changes without applying them (`-WhatIf`):
 
 ```PowerShell
-Set-BulkUserDetails.ps1 -CsvFile "UserDetails.csv" -WhatIf
+./Set-BulkUserDetails.ps1 -CsvFile "UserDetails.csv" -WhatIf
 ```
 
 ### CSV format
