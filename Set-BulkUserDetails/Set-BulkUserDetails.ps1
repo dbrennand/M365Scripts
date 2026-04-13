@@ -4,7 +4,7 @@
 
 .GUID 5eb214e0-3e61-40aa-80e4-12ddee39c919
 
-.AUTHOR dbrennand [ 52419383+dbrennand@users.noreply.github.com ]
+.AUTHOR Daniel Brennand [ 52419383+dbrennand@users.noreply.github.com ]
 
 .TAGS Set Bulk User Details
 
