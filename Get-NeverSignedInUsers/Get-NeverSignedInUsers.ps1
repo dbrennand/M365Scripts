@@ -4,7 +4,7 @@
 
 .GUID 2b0f2c1d-7d2a-4d0a-9a4e-7b1b5d2f1c6e
 
-.AUTHOR dbrennand [ 52419383+dbrennand@users.noreply.github.com ] with assistance from GPT-5.
+.AUTHOR Daniel Brennand [ 52419383+dbrennand@users.noreply.github.com ] with assistance from GPT-5.
 
 .TAGS Get Users Never Signed In
 
