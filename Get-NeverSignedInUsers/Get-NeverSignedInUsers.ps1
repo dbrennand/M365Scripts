@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 1.1.0
+.VERSION 1.2.0
 
 .GUID 2b0f2c1d-7d2a-4d0a-9a4e-7b1b5d2f1c6e
 
@@ -46,6 +46,9 @@
     than the specified number of days, in addition to users with no recorded sign-in activity.
     Accepts an integer between 1 and 3650 (e.g. 90 for 90 days).
 
+.PARAMETER ExcludeDisabled
+    Optional switch: exclude users where AccountEnabled is False from the results.
+
 .EXAMPLE
     Get-NeverSignedInUsers.ps1 -Verbose
 
@@ -57,6 +60,9 @@
 
 .EXAMPLE
     Get-NeverSignedInUsers.ps1 -InactiveDays 90 -ExportCsv "InactiveUsers.csv" -Verbose
+
+.EXAMPLE
+    Get-NeverSignedInUsers.ps1 -ExcludeDisabled -Verbose
 
 .LINK
     https://learn.microsoft.com/graph/api/resources/signinactivity
@@ -78,7 +84,11 @@ param (
     [Parameter(Mandatory = $false)]
     [ValidateRange(1, 3650)]
     [Int]
-    $InactiveDays
+    $InactiveDays,
+
+    [Parameter(Mandatory = $false)]
+    [Switch]
+    $ExcludeDisabled
 )
 
 begin {
@@ -137,6 +147,11 @@ process {
             $CutOff = [DateTimeOffset]::UtcNow.AddDays(-1 * $CreatedWithinDays)
             Write-Verbose -Message "Applying CreatedWithinDays filter: created after $($CutOff)."
             $NeverSignedIn = $NeverSignedIn | Where-Object -FilterScript { $_.CreatedDateTime -ge $CutOff }
+        }
+
+        if ($ExcludeDisabled) {
+            Write-Verbose -Message "Applying ExcludeDisabled filter: removing accounts where AccountEnabled is False."
+            $NeverSignedIn = $NeverSignedIn | Where-Object -FilterScript { $_.AccountEnabled -eq $true }
         }
 
         $Result = $NeverSignedIn | Select-Object -Property `

@@ -46,3 +46,9 @@ Find users inactive for a custom number of days and export to CSV:
 ```PowerShell
 ./Get-NeverSignedInUsers.ps1 -InactiveDays 60 -ExportCsv "InactiveUsers.csv" -Verbose
 ```
+
+Exclude disabled accounts from results:
+
+```PowerShell
+./Get-NeverSignedInUsers.ps1 -ExcludeDisabled -Verbose
+```
